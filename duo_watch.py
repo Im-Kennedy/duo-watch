@@ -89,13 +89,14 @@ def send_push(title, body):
     urllib.request.urlopen(req, timeout=30).close()
 
 
-def notify(subject, body):
+def notify(subject, body, short_subject, short_body):
+    """Full details go to the ntfy push; a short version goes to email/text."""
     sent = False
     if os.environ.get("NTFY_TOPIC"):
         send_push(subject, body)
         sent = True
     if os.environ.get("SMTP_USER"):
-        send_email(subject, body)  # EMAIL_TO can also be a carrier text gateway address
+        send_email(short_subject, short_body)  # EMAIL_TO can be a carrier text gateway address
         sent = True
     if not sent:
         print("No NTFY_TOPIC or SMTP_USER set; nothing to notify with", file=sys.stderr)
@@ -135,7 +136,13 @@ def main():
             "\nThis means Apple offered online pickup, not a guaranteed stock count. "
             "Confirm on apple.com before you go."
         )
-        notify(f"iPhone Duo available near {ZIP}", body)
+        short_items = [
+            f"{current[k][1]['color']} {current[k][1]['storage_label']} "
+            f"at {current[k][0]['name']} ({current[k][0]['distance_miles']} mi)"
+            for k in new_keys
+        ]
+        short_body = "Duo available: " + "; ".join(short_items) + ". Check apple.com now."
+        notify(f"iPhone Duo available near {ZIP}", body, "Duo available", short_body)
         print(f"Emailed about {len(new_keys)} new item(s)")
     else:
         print("Nothing new")
