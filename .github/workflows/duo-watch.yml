@@ -25,7 +25,7 @@ jobs:
           RADIUS_MILES: "75"
           # STORAGE_GB: "512"
           # COLOR: "Night Sky"
-          EMAIL_TO: "9152165080@tmomail.net"
+          EMAIL_TO: "9152165080@tmomail.net, 8083528616@tmomail.net"
           # Phone push via ntfy (recommended): add a secret NTFY_TOPIC with a long random name
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           # Email/text (optional): leave the secrets unset to skip it
