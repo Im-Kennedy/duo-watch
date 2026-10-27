@@ -27,8 +27,7 @@ jobs:
         env:
           ZIP: "97301"
           RADIUS_MILES: "75"
-          # STORAGE_GB: "512"
-          # COLOR: "Night Sky"
+          STORAGE_GB: "256"
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
