@@ -1,0 +1,32 @@
+# Save as .github/workflows/duo-watch.yml in a PRIVATE GitHub repo that also contains duo_watch.py
+name: duo-watch
+on:
+  schedule:
+    - cron: "*/20 * * * *"   # every 20 min; the data only refreshes that often
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Cache keys are immutable, so use a unique key per run and restore the newest prior one.
+      - uses: actions/cache@v4
+        with:
+          path: state.json
+          key: duo-state-${{ github.run_id }}
+          restore-keys: duo-state-
+
+      - name: Check for Duo availability
+        run: python3 duo_watch.py
+        env:
+          ZIP: "97301"            # Salem; change to 97401 for Eugene
+          RADIUS_MILES: "75"
+          # STORAGE_GB: "512"
+          # COLOR: "Night Sky"
+          # Phone push via ntfy (recommended): add a secret NTFY_TOPIC with a long random name
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          # Email (optional): leave the secrets unset to skip it
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
